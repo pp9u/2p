@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>q7ll </title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --accent-pink: #ff00ff;
+      --accent-red: #ff4d4d;
+      --accent-green: #00ff44;
+      --accent-gold: #ffcc00;
+      --bg-dark: #0a0a0a;
+    }
+
+    /* Reset Total Anti-Borda Branca */
+    * { 
+      cursor: none; 
+      outline: none !important; 
+      border: none !important;
+      box-shadow: none !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TELA DE BLOQUEIO */
+    #lock-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      transition: opacity 0.8s ease, visibility 0.8s;
+    }
+    .lock-icon { font-size: 80px; color: #fff; transition: color 0.3s, transform 0.3s; }
+    .unlocked .lock-icon { color: var(--accent-green) !important; transform: scale(1.2); }
+
+    /* CONTEÚDO PRINCIPAL */
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+      position: relative;
+    }
+    .show-profile .main-content { opacity: 1; }
+
+    /* YIN YANG */
+    .yinyang {
+      font-size: 75px;
+      position: absolute;
+      top: -150px;
+      animation: rotateYinYang 6s linear infinite;
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+    @keyframes rotateYinYang {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    #snow-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+    #custom-cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 10px #fff !important;
+      z-index: 11000;
+      transform: translate(-50%, -50%);
+    }
+
+    .image-link { margin-bottom: 15px; transition: transform 0.3s ease; text-decoration: none; }
+    .image-link:hover { transform: scale(1.05); }
+    .skin-img { width: 110px; height: 110px; border-radius: 8px; object-fit: cover; display: block; }
+    
+    .nick { font-size: 38px; margin: 0; font-weight: bold; }
+    .subnick { color: #444; font-size: 16px; margin-bottom: 30px; letter-spacing: 2px; }
+
+    /* CARD NAMEMC */
+    .card-link { text-decoration: none; color: inherit; display: block; }
+    .card {
+      background: var(--bg-dark);
+      border-radius: 12px;
+      padding: 22px 30px;
+      width: 360px;
+      transition: transform 0.4s ease, outline 0.3s ease, box-shadow 0.3s ease;
+      animation: rankSync 9s infinite linear;
+    }
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+      outline: 2px solid var(--current-color) !important;
+      outline-offset: -2px;
+      box-shadow: 0 0 25px var(--current-glow) !important;
+    }
+
+    @keyframes rankSync {
+      0%, 32% { --current-color: var(--accent-red); --current-glow: rgba(255, 77, 77, 0.5); }
+      33%, 65% { --current-color: var(--accent-pink); --current-glow: rgba(255, 0, 255, 0.5); }
+      66%, 100% { --current-color: var(--accent-green); --current-glow: rgba(0, 255, 68, 0.5); }
+    }
+
+    .rank-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .rank-text-wrapper { position: relative; height: 12px; width: 240px; font-family: 'Press Start 2P', cursive; font-size: 9px; }
+    .rank-text { position: absolute; width: 100%; opacity: 0; animation: rankTrigger 9s infinite; white-space: nowrap; }
+
+    .natal-info { color: var(--accent-red); }
+    .ultra-info { color: var(--accent-pink); animation-delay: 3s; }
+    .ferias-info { color: var(--accent-green); animation-delay: 6s; }
+    .light { color: var(--accent-gold); }
+
+    @keyframes rankTrigger { 0%, 30% { opacity: 1; } 33%, 100% { opacity: 0; } }
+
+    .segments { display: flex; gap: 10px; height: 4px; margin-top: 20px; }
+    .seg-bg { flex: 1; background: #151515; border-radius: 2px; overflow: hidden; position: relative; }
+    .seg-fill { position: absolute; height: 100%; width: 0%; animation-duration: 9s; animation-iteration-count: infinite; animation-timing-function: linear; }
+    .bar-1 { background: var(--accent-red); animation-name: fillBar1; }
+    .bar-2 { background: var(--accent-pink); animation-name: fillBar2; }
+    .bar-3 { background: var(--accent-green); animation-name: fillBar3; }
+
+    @keyframes fillBar1 { 0% { width: 0%; } 25%, 33% { width: 100%; } 34%, 100% { width: 0%; } }
+    @keyframes fillBar2 { 0%, 33% { width: 0%; } 58%, 66% { width: 100%; } 67%, 100% { width: 0%; } }
+    @keyframes fillBar3 { 0%, 66% { width: 0%; } 91%, 100% { width: 100%; } }
+  </style>
+</head>
+<body class="locked">
+
+  <audio id="bg-music" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="lock-overlay" onclick="unlockSite()">
+    <div style="text-align: center;">
+      <div id="lock-icon" class="lock-icon">🔒</div>
+      <p style="font-size: 9px; color: #333; margin-top: 15px; font-family: 'Press Start 2P';">CLICK TO UNLOCK</p>
+    </div>
+  </div>
+
+  <div id="custom-cursor"></div>
+  <canvas id="snow-canvas"></canvas>
+
+  <div class="main-content">
+    <div class="yinyang">☯</div>
+
+    <a href="https://discord.com/users/1416629927662452747" target="_blank" class="image-link">
+      <img src="Dark image.jpg" class="skin-img" onerror="this.src='https://minotar.net/helm/q7ll/100'">
+    </a>
+    
+    <h1 class="nick">2p</h1>
+    <p class="subnick">@pp9u</p>
+
+    <a href="https://pt.namemc.com/profile/q7ll.1" target="_blank" class="card-link">
+      <div class="card">
+        <div class="rank-container">
+          <img src="https://minotar.net/avatar/q7ll/24" style="width:24px; image-rendering:pixelated;">
+          <div class="rank-text-wrapper">
+            <div class="rank-text natal-info">NATAL q7ll <span class="light">[LIGHT]</span></div>
+            <div class="rank-text ultra-info">ULTRA q7ll <span class="light">[LIGHT]</span></div>
+            <div class="rank-text ferias-info">FÉRIAS q7ll <span class="light">[LIGHT]</span></div>
+          </div>
+        </div>
+        <div class="segments">
+          <div class="seg-bg"><div class="seg-fill bar-1"></div></div>
+          <div class="seg-bg"><div class="seg-fill bar-2"></div></div>
+          <div class="seg-bg"><div class="seg-fill bar-3"></div></div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <script>
+    function unlockSite() {
+      const lockIcon = document.getElementById('lock-icon');
+      const overlay = document.getElementById('lock-overlay');
+      const music = document.getElementById('bg-music');
+      
+      lockIcon.innerHTML = '🔓';
+      document.body.classList.add('unlocked');
+      
+      // Inicia a música com volume controlado
+      music.play().catch(e => console.log("Interação confirmada."));
+      music.volume = 0.5; 
+
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        document.body.classList.add('show-profile');
+      }, 600);
+    }
+
+    // Cursor e Neve
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, snowflakes = [];
+
+    function initSnow() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      snowflakes = [];
+      for (let i = 0; i < 120; i++) {
+        snowflakes.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 3 + 1, d: Math.random() * 1 });
+      }
+    }
+
+    function drawSnow() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.beginPath();
+      for (let i = 0; i < snowflakes.length; i++) {
+        let f = snowflakes[i];
+        ctx.moveTo(f.x, f.y);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+      }
+      ctx.fill();
+      updateSnow();
+    }
+
+    function updateSnow() {
+      for (let i = 0; i < snowflakes.length; i++) {
+        let f = snowflakes[i];
+        f.y += Math.pow(f.d, 2) + 1;
+        f.x += Math.sin(f.y / 30);
+        if (f.y > height) snowflakes[i] = { x: Math.random() * width, y: 0, r: f.r, d: f.d };
+      }
+    }
+
+    window.addEventListener('resize', initSnow);
+    initSnow();
+    function anim() { drawSnow(); requestAnimationFrame(anim); }
+    anim();
+  </script>
+</body>
+</html>
